@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col s12">
+        <h3 class="center-align">Invites</h3>
+    </div>
+    <div class="col s12 m5" ng-repeat="book in invites track by $index">
+        <div class="card-panel teal" ng-click="addToLibrary($index)">
+            <span class="white-text flow-text" style="font-size: 1.4em">
+                {{book.heading}}
+                <i class="material-icons right-align" style="float: right">library_add</i>
+            </span>
+            <hr>
+            <span class="white-text flow-text truncate" style="font-size: 1.1em">
+                {{book.des}}
+            </span>
+        </div>
+    </div>
+    <h6 class="col s12" ng-hide="invites.length">Your inbox is empty. If someone has shared a trail with you it will appear here.</h6>
+</div>

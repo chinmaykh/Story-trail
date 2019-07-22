@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col s12 m4 l4" ng-repeat="book in books track by $index">
+    <div class="card-panel teal" ng-click="nav_type(book)">
+      <span class="white-text flow-text" style="font-size: 1.4em">
+        {{book.heading}}
+        <i class="material-icons right-align" style="float: right">edit</i>
+      </span>
+      <hr>
+      <span class="white-text flow-text truncate" style="font-size: 1.1em">
+        {{book.des}}
+      </span>
+    </div>
+  </div>
+  <div class="col s12">
+    <h6 ng-hide="books.length">You don't seem to have any stories in your list. Pen  one down by clicking the button below</h6>
+  </div>
+</div>
+<h6 ng-model="helper">&nbsp;{{helper}}</h6>
+<div class="fixed-action-btn" id="fab" ng-click="nav_new_story()">
+  <a class="btn-floating btn-large purple">
+    <i class="large material-icons">mode_edit</i>
+  </a>
+</div>
+
+<script>
+  document.getElementById('fab').style.left = "10px"
+</script>

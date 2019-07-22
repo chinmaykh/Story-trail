@@ -1,0 +1,37 @@
+<ul class="collection with-header">
+    <li class="collection-header row">
+        <h4 class="col s11">{{story.heading}}</h4>
+        <i class="material-icons s1"
+            style="margin-block-start: 1.33em; margin-block-end:1.33em; font-size: 1.6em" onclick="location.replace('/#!/share')">share</i>
+    </li>
+    <li class="collection-item" ng-repeat="entry in story.entries">
+        <div>
+
+            <p class="flow-text" style="text-align: left; word-break: break-all">
+                {{entry.entry}}
+            </p>
+            <br>
+            <div class="chip secondary-content" style="float: right;">
+                <img src="/images/photo.png">
+                {{entry.author_name}}
+            </div>
+            <br>
+        </div>
+        <br>
+    </li>
+    <li class="collection-item">
+        <h5>Extend the t(r)ail</h5>
+        <div class="row">
+            <form ng-submit="addPart()">
+                <div class="input-field col s11">
+                    <textarea id="textarea1" class="materialize-textarea" ng-model="insta_para" required></textarea>
+                    <label for="textarea1">Your contribution</label>
+                   
+                </div>
+                <i class="material-icons col s1 circle" style="margin-block-start: 1.3em" onclick="document.getElementById('recorder').click()">mic<input type="file" accept="audio/*" capture id="recorder" style="visibility: hidden"></i>
+
+                <button class="btn purple col s12" style="border-radius:15em" type="submit">Commit</button>
+            </form>
+        </div>
+    </li>
+</ul>

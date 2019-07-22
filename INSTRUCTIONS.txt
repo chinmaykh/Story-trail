@@ -1,0 +1,20 @@
+SCSCSSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSCSC
+			
+			This is a MEAN STACK template 
+			
+	Author: Chinmay K Haritas
+	Date: 17 August 2018
+
+	Free for all personal use. Follow the instructions below for any help.
+	The node_modules folder is not mobile due to its size.
+	For acquiring that, use an external storage or
+	Download from drive (Unpreferable).
+	The MongoDB url needs to be active before starting.
+	Use an online db or host locally.
+	Nodemon(c) keeps updating - IF your app misbehaves while starting up consider reviewing the version of nodemon.
+	
+	Windows location of mongo -  C:/Program files/mongodb/server/3.4/bin
+	Mac location of mongo -  
+	( Consider reviewing version )
+	
+	Let your creativity unleash !!

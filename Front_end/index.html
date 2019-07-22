@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.css" media="screen,projection" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+    <!--Manifest-->
+    <!-- <link rel="manifest" href="/manifest.json"> -->
+</head>
+
+<body style="font-family: 'PT Sans', sans-serif;">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper purple darken-2" id="navnavnav" style="position: relative;">
+                <a href="#!" style="width:fit-content;font-size: 2em;display:inline-block ;">Story Trail</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger" style="display: inline-block">
+                    <i class="material-icons">menu</i>
+                </a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a href="#!/invites">Invites</a>
+                    </li>
+                    <li>
+                        <a href="#!/login">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- <ul class="sidenav" id="mobile-demo">
+        
+        <li>
+            <a href="#!/login">Sign Out</a>
+        </li>
+        <li>
+            <a href="#!/invites">Invites</a>
+        </li>
+    </ul> -->
+
+    <ul class="sidenav" id="mobile-demo">
+        <li>
+            <div class="user-view">
+                <div class="background" style="background-color: blueviolet">
+                </div>
+                <a href="#user"><img class="circle" src="./images/photo.png" style="border-style:inset"></a>
+                <a href="#name"><span class="white-text name" id="user_name"></span></a>
+                <a href="#email"><span class="white-text email" id="user_mail">jdandturk@gmail.com</span></a>
+            </div>
+        </li>
+        <li><a href="#!"></i>Story Trail (beta) v1.0</a></li>
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a class="subheader">About</a></li>
+        <li><a class="waves-effect">Another Great App by ChinmayKH</a></li>
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a class="subheader">Features Comming Soon-</a></li>
+        <li><a class="waves-effect">Record Audio and add as a clip !</a></li>
+        <li><a class="waves-effect">Add pics to support yur narrative !</a></li>
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a class="waves-effect" href="./#!/login">Sign Out</a></li>
+    </ul>
+
+    <div ng-view style="height:100%"></div>
+
+    <!--JavaScript at end of body for optimized loading-->
+
+    <!-- Materialize scripts -->
+    <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+    <!-- Angular JS and Angular Route-->
+    <script src=".\angularjs\angular\angular.min.js"></script>
+    <script src=".\angularjs\angular-route\angular-route.min.js"></script>
+    <!-- Route Provider -->
+    <script src=".\app.js"></script>
+    <!-- Controllers -->
+    <script src=".\controllers\groups.js"></script>
+    <script src=".\controllers/list.js"></script>
+    <script src="./controllers/storyline.js"></script>
+    <script src="./controllers/loading.js"></script>
+    <script src="./controllers/login.js"></script>
+    <script src="./controllers/share.js"></script>
+    <script src="./controllers/invites.js"></script>
+
+    <script>
+        // Navbar initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, {});
+            document.getElementById('user_mail').innerText = JSON.parse(localStorage.getItem('user')).username
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        if (!localStorage.getItem('user')) {
+            location.replace('/#!/login');
+        }
+
+
+    </script>
+
+</body>
+
+</html>

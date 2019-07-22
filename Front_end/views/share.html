@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col s12 white">
+        <h4>Trail to share -</h4>
+    </div>
+
+    <div class="col s12">
+        <div class="card-panel teal">
+
+            <span class="white-text flow-text" style="font-size: 1.4em">
+
+                {{share_destination}}
+
+            </span>
+
+        </div>
+    </div>
+    <div class="col s12">
+        <hr>
+    </div>
+    <div class="col s12 white">
+        <h4>Share to -</h4>
+    </div>
+    <div class="col s12">
+        <form ng-submit="addToList()">
+            <input list="browsers" name="browser" ng-model="share_user">
+            <datalist id="browsers">
+                <option ng-repeat="name in names track by $index" value="{{name}}">
+            </datalist>
+
+        </form>
+    </div>
+    <div class="col s12">
+        <p>After selecting the user, click on ADD USER button to add to the share list. <br> Afer selecting all users, click share </p>
+    </div>
+    <div class="col s12">
+        <ul class="collection">
+            <li class="collection-item" ng-repeat="j in jkl track by $index">{{j}}</li>
+        </ul>
+    </div>
+    <div class="col s12 center-align">
+        <br>
+        <button class="btn purple" style="border-radius: 13em" ng-click="addToList()" >Add User</button>
+        <br>
+        <br>
+        <button class="btn purple" style="border-radius: 13em" ng-click="shareIt()" id="submitbutton" > Share Trail</button>
+    </div>
+
+</div>
