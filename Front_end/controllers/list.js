@@ -17,7 +17,7 @@ if(!localStorage.getItem('user')){
     $scope.helper = "";
 
     user.story_list.forEach(element => {
-        $http.post('http://192.168.0.109:2019/api/name/story', element)
+        $http.post(window.location.origin + '/api/name/story', element)
             .then((res) => {
                 console.log(res)
                 $scope.books.push(res.data);
@@ -29,7 +29,7 @@ if(!localStorage.getItem('user')){
 
     $scope.addBook = function () {
 
-        $http.post('http://192.168.0.109:2019/api/story',
+        $http.post(window.location.origin + '/api/story',
             {
                 "heading": $scope.title,
                 "entries": [
@@ -50,7 +50,7 @@ if(!localStorage.getItem('user')){
                 user.story_list.push({ _id: res.data._id });
                 localStorage.setItem('user', JSON.stringify(user))
 
-                $http.post('http://192.168.0.109:2019/api/update/user',user).then(
+                $http.post(window.location.origin + '/api/update/user',user).then(
                     (res)=>{
                         M.toast({html:'Successfully started the trail'})
                         location.replace('/#!/home')

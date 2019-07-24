@@ -11,7 +11,7 @@ myApp.controller('InvitesController', function ($scope, $http, $interval, $locat
 
 
     // Refresh the list of invites
-    $http.post('http://192.168.0.109:2019/api/auth', {
+    $http.post(window.location.origin + '/api/auth', {
         username: JSON.parse(localStorage.getItem('user')).username,
         password: JSON.parse(localStorage.getItem('user')).password
     }).then((res) => {
@@ -33,7 +33,7 @@ myApp.controller('InvitesController', function ($scope, $http, $interval, $locat
         if (user.invites.length != 0) {
             user.invites.forEach(element => {
                 console.log(element)
-                $http.post('http://192.168.0.109:2019/api/name/story', { "_id": element })
+                $http.post(window.location.origin + '/api/name/story', { "_id": element })
                     .then((res) => {
                         $scope.invites.push(res.data);
                     }, (res) => {
@@ -53,7 +53,7 @@ myApp.controller('InvitesController', function ($scope, $http, $interval, $locat
         console.log(temp_user.invites)
         temp_user.story_list.push({ _id: user.invites[index] });
         temp_user.invites.splice(index, 1);
-        $http.post('http://192.168.0.109:2019/api/update/user', temp_user)
+        $http.post(window.location.origin + '/api/update/user', temp_user)
             .then((res) => {
                 localStorage.setItem('user', JSON.stringify(temp_user));
                 $scope.invites.splice(index, 1);

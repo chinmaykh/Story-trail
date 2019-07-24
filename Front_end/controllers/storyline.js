@@ -15,7 +15,7 @@ myApp.controller('StrylineController', function ($scope, $http, $interval, $loca
     var tid = JSON.parse(localStorage.getItem('edit_story'))._id
     console.log(tid)
 
-    $http.post('http://192.168.0.109:2019/api/get/story',
+    $http.post(window.location.origin + '/api/get/story',
         {_id:tid}
     ).then((res) => {
         $scope.story = res.data;
@@ -37,7 +37,7 @@ myApp.controller('StrylineController', function ($scope, $http, $interval, $loca
 
         story.entries.push(entry);
 
-        $http.post('http://192.168.0.109:2019/api/update/story', story)
+        $http.post(window.location.origin + '/api/update/story', story)
             .then(
                 (req) => {
                     $scope.insta_para = ""

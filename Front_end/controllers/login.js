@@ -16,7 +16,7 @@ myApp.controller('LoginController', function ($scope, $http, $interval, $locatio
             password: $scope.pword
         }
 
-        $http.post('http://192.168.0.109:2019/api/auth', cred)
+        $http.post(window.location.origin  +'/api/auth', cred)
             .then((res) => {
                 // On success
                 $scope.status = ""

@@ -16,7 +16,7 @@ if(!localStorage.getItem('user')){
     $scope.share_destination =shareId.heading
 
 
-    $http.get('http://192.168.0.109:2019/api/list/name/users')
+    $http.get(window.location.origin + '/api/list/name/users')
         .then((res) => {
             console.log(res)
             $scope.names = res.data
@@ -51,7 +51,7 @@ if(!localStorage.getItem('user')){
                 "uid": element
             }
 
-            $http.post('http://192.168.0.109:2019/api/invite/user', body)
+            $http.post(window.location.origin + '/api/invite/user', body)
                 .then((res) => {
                     M.toast({html: 'Shared Successfully !'})
                 }, (res) => {
