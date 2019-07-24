@@ -4,6 +4,7 @@ var myApp = angular.module('myApp');
 myApp.controller('StrylineController', function ($scope, $http, $interval, $location, $anchorScroll, fileUpload, $window) {
     console.log("Storyline Controller loaded.... ");
 
+    document.getElementById('user_mail').innerText = JSON.parse(localStorage.getItem('user')).username
 
 
     if (!localStorage.getItem('user')) {

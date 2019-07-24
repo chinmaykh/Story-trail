@@ -52,7 +52,7 @@
                 </div>
                 <a href="#user"><img class="circle" src="./images/photo.png" style="border-style:inset"></a>
                 <a href="#name"><span class="white-text name" id="user_name"></span></a>
-                <a href="#email"><span class="white-text email" id="user_mail">jdandturk@gmail.com</span></a>
+                <a href="#email"><span class="white-text email" id="user_mail">Sign in, first</span></a>
             </div>
         </li>
         <li><a href="#!"></i>Story Trail (beta) v1.0</a></li>
@@ -98,7 +98,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.sidenav');
             var instances = M.Sidenav.init(elems, {});
-            document.getElementById('user_mail').innerText = JSON.parse(localStorage.getItem('user')).username
         });
 
     </script>

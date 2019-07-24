@@ -4,6 +4,8 @@ var myApp = angular.module('myApp');
 myApp.controller('HomeController', function ($scope, $http, $interval, $location, $anchorScroll, fileUpload, $window) {
     console.log("Home Controller loaded.... ");
 
+document.getElementById('user_mail').innerText = JSON.parse(localStorage.getItem('user')).username
+
     
 if(!localStorage.getItem('user')){
     M.toast({html:'Sign In first !!'})
