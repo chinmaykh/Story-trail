@@ -1,8 +1,8 @@
 <ul class="collection with-header">
     <li class="collection-header row">
         <h4 class="col s11">{{story.heading}}</h4>
-        <i class="material-icons s1"
-            style="margin-block-start: 1.33em; margin-block-end:1.33em; font-size: 1.6em" onclick="location.replace('/#!/share')">share</i>
+        <i class="material-icons s1" style="margin-block-start: 1.33em; margin-block-end:1.33em; font-size: 1.6em"
+            onclick="location.replace('/#!/share')">share</i>
     </li>
     <li class="collection-item" ng-repeat="entry in story.entries">
         <div>
@@ -23,15 +23,22 @@
         <h5>Extend the t(r)ail</h5>
         <div class="row">
             <form ng-submit="addPart()">
+                <h6 ng-model="editText"></h6>
                 <div class="input-field col s11">
-                    <textarea id="textarea1" class="materialize-textarea" ng-model="insta_para" required></textarea>
-                    <label for="textarea1">Your contribution</label>
-                   
+                    <input  id="textarea1" class="materialize-textarea" ng-model="insta_para" required>
                 </div>
-                <i class="material-icons col s1 circle" style="margin-block-start: 1.3em" onclick="document.getElementById('recorder').click()">mic<input type="file" accept="audio/*" capture id="recorder" style="visibility: hidden"></i>
+                <i class="material-icons col s1 circle" style="margin-block-start: 1.3em"
+                    onclick="document.getElementById('recorder').click()">mic<input type="file" accept="audio/*" capture
+                        id="recorder" style="visibility: hidden"></i>
 
                 <button class="btn purple col s12" style="border-radius:15em" type="submit">Commit</button>
             </form>
         </div>
     </li>
 </ul>
+
+
+<!-- Socket .io -->
+<script>
+
+</script>

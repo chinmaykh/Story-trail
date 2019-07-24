@@ -1,8 +1,8 @@
 // PROJECT SH 01 
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-// const io = require('socket.io')(http);
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 
 // Import Mongoose package
@@ -27,7 +27,6 @@ app.use(fileupload());
 app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	console.log(req.body);
 	next();
 });
 
@@ -36,12 +35,12 @@ app.use(function (req, res, next) {
 users = require('./models/users.js')
 story = require('./models/story.js')
 
+// Socket.io Variables
+connections = [];
+activeStories = [];
+
 conn.once('open', function () {
 	var gfs = Grid(conn.db);
-
-
-	// All set!
-
 
 	//-----------------------------MAIL OPTIONS-------------------------------------------
 
@@ -89,8 +88,6 @@ conn.once('open', function () {
 
 	function findFiles(req, res, pram) {
 
-		// console.log("filename to download "+req.params);
-		console.log(pram);
 		gfs.files.find({ filename: pram }).toArray(function (err, files) {
 			if (err) {
 				return res.status(400).send(err);
@@ -100,8 +97,6 @@ conn.once('open', function () {
 					message: 'File not found'
 				});
 			}
-			console.log(files);
-
 			res.json(files);
 		});
 
@@ -111,21 +106,17 @@ conn.once('open', function () {
 	// FILE UPLOAD URL
 	app.post('/upload', (req, res) => {
 		req.files.file.name = req.body.class;
-		console.log(req);
 		cmon(req, res);
 	});
 
 	// FILE DOWNLOAD URL
 	app.get('/files/:id', (req, res) => {
-		console.log(req.params.id);
 		getFiles(req.params.id, res);
-
 	});
 
 	// FILE QUERY URL
 	app.post('/findMyFiles/', (req, res) => {
 		var param = req.body.param;
-		console.log(param);
 		findFiles(req, res, param);
 	});
 
@@ -228,14 +219,11 @@ conn.once('open', function () {
 			var found = false;
 			result.forEach(element => {
 				if (element.username == req.body.username) {
-					console.log('Found Match !');
 					found = 1
 					if (element.password == req.body.password) {
 						res.send(element);
-						console.log("Authentication : Success");
 					} else {
 						res.sendStatus(401)
-						console.log("Authentication : Failed")
 					}
 				}
 			});
@@ -270,7 +258,7 @@ conn.once('open', function () {
 				{
 					"heading": result[0].heading,
 					"des": result[0].entries[0].entry,
-					"_id":result[0]._id
+					"_id": result[0]._id
 				}
 			)
 
@@ -279,10 +267,8 @@ conn.once('open', function () {
 
 
 	app.post('/api/get/story', (req, res) => {
-		console.log(req.body)
 		story.getstoryById(req.body._id, (err, result) => {
 			if (err) { throw err; }
-			console.log(result)
 			res.send(result[0]);
 		})
 	})
@@ -296,7 +282,69 @@ conn.once('open', function () {
 
 	// Routing ends here !
 
-	app.set('port',(process.env.PORT || 5000 ))
-	app.listen( app.get('port') );
-	console.log("The Server is running on port number " + app.get('port'))
+
+	// Socket.io for real time communication... WEbsockets are cool 
+
+
+
+	io.sockets.on('connection', (socket) => {
+
+		// Disconnected
+		socket.on('disconnect', (e) => {
+
+			var checl = false;
+			var n;
+			for (let index = 0; index < activeStories.length; index++) {
+				if (activeStories[index].user == socket) {
+					checl = true;
+					n = index
+				}
+			}
+
+			if (checl) {
+				activeStories.splice(n, 1);
+				io.sockets.emit('freedOne', activeStories);
+			}
+
+		})
+
+		// Send 
+		socket.on('blockEdit', (data) => {
+
+			// Check dam
+			var flag = 0;
+
+			// Check if incoming story is already being edited
+			for (let index = 0; index < activeStories.length; index++) {
+				if (activeStories[index].storyData.story == data.story) {
+					flag = 1;
+					break;
+				}
+			}
+
+			// If story is not being edited then add incoming accept to the list
+			if (flag == 0) {
+				var blackList = {
+					user: socket,
+					storyData: data
+				}
+				activeStories.push(blackList);
+				console.log(activeStories);
+				io.sockets.emit(data.user, 'Authorized')
+			} else {
+				io.sockets.emit(data.user, 'Unauthorized')
+			}
+
+		})
+
+	})
+
+
+
+	server.listen(process.env.PORT || 5000, (e) => {
+		console.log("The Server is running on port number " + 5000)
+	})
+
 });
+
+
