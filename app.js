@@ -249,7 +249,7 @@ conn.once('open', function () {
 					trap = 0
 
 					for (let index = 0; index < result.length; index++) {
-						if(req.body.username == result[index].email){
+						if (req.body.username == result[index].email) {
 							console.log('registered but not verified');
 							trap = 1;
 						}
@@ -266,46 +266,81 @@ conn.once('open', function () {
 				})
 
 				function AddToInvitees(email) {
-					var authCode = Math.floor(Math.random() * 1000)
+					var authCode;
 					var creds = {
 						'email': req.body.username,
 						'password': req.body.password,
-						'code': authCode
 					}
 
 					invitees.addinvitees(creds, (err, result) => {
 						if (err) { throw err; }
 						res.send('EAP First time');
-					})
+						authCode = result._id;
 
 
-					var mailOptions = {
-						from: 'Story trail',
-						to: email,
-						subject: 'Story trail: Email Verification !',
-						html:'<h1>Welcome to nodemailer</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="http://localhost:5000/api/verifymail/:"'+ authCode +'>Verify email</a>' 
-					}
 
-					transporter.sendMail(mailOptions, function (error, info) {
+						var content = '<h1>Welcome to Story Trail</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="http://localhost:5000/api/verifymail/' + authCode + '">Verify email</a><br><h4>Story Trail - An App by ChinmayKH</h4>'
 
-						if (error) {
-							console.log(error);
-							console.log("Check for security permission from google");
-						} else {
-							console.log('Email sent: ' );
+						var mailOptions = {
+							from: 'Story trail <storytrail.chinmaykh@gmail.com>',
+							to: email,
+							subject: 'Story trail: Email Verification !',
+							html: content
 						}
-					});
 
-					//Send mail to confirm emailId
-					//Enclose this in a proper route provider
+						transporter.sendMail(mailOptions, function (error, info) {
+
+							if (error) {
+								console.log(error);
+								console.log("Check for security permission from google");
+							} else {
+								console.log('Email sent: To ' + req.body.username + ' authCode : ' + authCode);
+							}
+						});
+
+						//Send mail to confirm emailId
+						//Enclose this in a proper route provider
+
+
+					})
 
 				}
 			}
 		});
 	})
 
-	app.get('/api/verifymail/:id',(req,res)=>{
-		res.send(req.params.id);
+	// Verification !
+	// Check if 
+	app.get('/api/verifymail/:id', (req, res) => {
+		invitees.getinviteesById(req.params.id, (err, result) => {
+			if(err){throw err;}
+
+			if (result[0] == undefined) {
+				res.send('Please Check')
+			} else {
+				var body = {
+					"username": result[0].email,
+					"password": result[0].password,
+					"story_list": [],
+					"invites": []
+				}
+
+				users.getuserByEmail(body.email, (err, resul) => {
+					if (resul.length == 0) {
+						users.adduser(body, (er, resu) => {
+							if (er) { throw er; }
+							res.send('<a href="/#!/login">Redirect to Login</a>')
+							invitees.removeinvitees(req.params.id, (e, re) => {
+								if (e) { throw e; }
+							})
+						})
+					} else{
+						res.send('Already verified')
+					}
+				})
+
+			}
+		})
 	});
 
 	app.get('/list/invitees', (req, res) => {

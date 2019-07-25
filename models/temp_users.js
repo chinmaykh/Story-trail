@@ -9,10 +9,6 @@ var inviteesSchema = mongoose.Schema({
     password:{
         type:String,
         required:true
-    },
-    code:{
-        type:Number,
-        required:true
     }
 });
 
@@ -22,8 +18,8 @@ module.exports.getInvitees = (callback, limit) =>{
 	invitees.find(callback).limit(limit);
 };
 
-module.exports.getinviteesByMail = (id, callback) =>{
-	invitees.find({email:id}, callback);
+module.exports.getinviteesById = (id, callback) =>{
+	invitees.find({_id:id}, callback);
 };
 
 module.exports.addinvitees = (inviteesname,callback) =>{
@@ -32,7 +28,7 @@ module.exports.addinvitees = (inviteesname,callback) =>{
 }
 
 module.exports.removeinvitees = (id, callback) =>{	
-	invitees.remove({email:id}, callback);
+	invitees.remove({_id:id}, callback);
 };
 
 
