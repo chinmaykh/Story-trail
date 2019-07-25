@@ -34,6 +34,7 @@ app.use(function (req, res, next) {
 // ObjectName = require('./models/NameOfFile)
 users = require('./models/users.js')
 story = require('./models/story.js')
+invitees = require('./models/temp_users.js')
 
 // Socket.io Variables
 connections = [];
@@ -47,8 +48,8 @@ conn.once('open', function () {
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: 'chinmayharitas@gmail.com', // Username
-			pass: 'Chin9kesh8' // pWord
+			user: 'storytrail.chinmaykh@gmail.com', // Username
+			pass: 'story_trail' // pWord
 		}
 	});
 
@@ -214,27 +215,106 @@ conn.once('open', function () {
 
 
 	app.post('/api/auth', (req, res) => {
+
+		// Check if user is already registered
 		users.getusers((err, result) => {
 			if (err) { throw err; }
 			var found = false;
 			result.forEach(element => {
 				if (element.username == req.body.username) {
+					// When found mark it
 					found = 1
 					if (element.password == req.body.password) {
+						// Send the data
 						res.send(element);
 					} else {
-						res.sendStatus(401)
+						// Send Invalid
+						res.send('INP')
 					}
 				}
 			});
 
+			// If not found ( New User)
 			if (!found) {
-				users.adduser(req.body, (err, result) => {
-					res.send(result)
+
+				// Check if invitee is pending registration
+
+				// Acquire list of Pending 
+				invitees.getInvitees((err, result) => {
+					// throw errors
+					if (err) { throw err; }
+
+					// Cheking here
+
+					trap = 0
+
+					for (let index = 0; index < result.length; index++) {
+						if(req.body.username == result[index].email){
+							console.log('registered but not verified');
+							trap = 1;
+						}
+					}
+
+					// Notify the user
+					if (trap) {
+						// You are waiting to be authorized man !
+						res.send('EAP')
+					} else {
+						// Additing you to the list of registration pending 
+						AddToInvitees(req.body.username);
+					}
 				})
+
+				function AddToInvitees(email) {
+					var authCode = Math.floor(Math.random() * 1000)
+					var creds = {
+						'email': req.body.username,
+						'password': req.body.password,
+						'code': authCode
+					}
+
+					invitees.addinvitees(creds, (err, result) => {
+						if (err) { throw err; }
+						res.send('EAP First time');
+					})
+
+
+					var mailOptions = {
+						from: 'Story trail',
+						to: email,
+						subject: 'Story trail: Email Verification !',
+						html:'<h1>Welcome to nodemailer</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="http://localhost:5000/api/verifymail/:"'+ authCode +'>Verify email</a>' 
+					}
+
+					transporter.sendMail(mailOptions, function (error, info) {
+
+						if (error) {
+							console.log(error);
+							console.log("Check for security permission from google");
+						} else {
+							console.log('Email sent: ' );
+						}
+					});
+
+					//Send mail to confirm emailId
+					//Enclose this in a proper route provider
+
+				}
 			}
 		});
 	})
+
+	app.get('/api/verifymail/:id',(req,res)=>{
+		res.send(req.params.id);
+	});
+
+	app.get('/list/invitees', (req, res) => {
+		invitees.getinviteess((err, result) => {
+			if (err) { throw err; }
+			res.send(result)
+		});
+	})
+
 	// Stories
 
 	app.get('/api/list/story', (req, res) => {
