@@ -59,7 +59,7 @@ myApp.controller('ShareController', function ($scope, $http, $interval, $locatio
                     if (navigator.share) {
                         navigator.share({
                             title: "Story Trail: Trail shared to you !",
-                            text: shareId.heading ,
+                            text: "Trail Shared: "+  shareId.heading ,
                             url: window.location.origin + '/#!/invites',
                         })
                             .then(() => console.log('Successful share'))
