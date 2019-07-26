@@ -65,13 +65,13 @@ myApp.controller('ShareController', function ($scope, $http, $interval, $locatio
                             .then(() => console.log('Successful share'))
                             .catch((error) => console.log('Error sharing', error));
                     } else {
-                        alert('No navigator.share')
+                        console.log('NO share option possible')
                     }
                     location.replace('/#!/home')
 
                 }, (res) => {
                     console.log(res)
-                    M.toast({ html: 'Som error occured ! Notify developer if problem persists' })
+                    M.toast({ html: 'Some error occurred ! Notify developer if problem persists' })
                 });
 
         })
