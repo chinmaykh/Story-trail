@@ -1,8 +1,8 @@
 // PROJECT SH 01 
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-// const io = require('socket.io')(http);
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 
 // Import Mongoose package
@@ -27,7 +27,6 @@ app.use(fileupload());
 app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	console.log(req.body);
 	next();
 });
 
@@ -35,21 +34,22 @@ app.use(function (req, res, next) {
 // ObjectName = require('./models/NameOfFile)
 users = require('./models/users.js')
 story = require('./models/story.js')
+invitees = require('./models/temp_users.js')
+
+// Socket.io Variables
+connections = [];
+activeStories = [];
 
 conn.once('open', function () {
 	var gfs = Grid(conn.db);
-
-
-	// All set!
-
 
 	//-----------------------------MAIL OPTIONS-------------------------------------------
 
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: 'chinmayharitas@gmail.com', // Username
-			pass: 'Chin9kesh8' // pWord
+			user: 'storytrail.chinmaykh@gmail.com', // Username
+			pass: 'story_trail' // pWord
 		}
 	});
 
@@ -89,8 +89,6 @@ conn.once('open', function () {
 
 	function findFiles(req, res, pram) {
 
-		// console.log("filename to download "+req.params);
-		console.log(pram);
 		gfs.files.find({ filename: pram }).toArray(function (err, files) {
 			if (err) {
 				return res.status(400).send(err);
@@ -100,8 +98,6 @@ conn.once('open', function () {
 					message: 'File not found'
 				});
 			}
-			console.log(files);
-
 			res.json(files);
 		});
 
@@ -111,21 +107,17 @@ conn.once('open', function () {
 	// FILE UPLOAD URL
 	app.post('/upload', (req, res) => {
 		req.files.file.name = req.body.class;
-		console.log(req);
 		cmon(req, res);
 	});
 
 	// FILE DOWNLOAD URL
 	app.get('/files/:id', (req, res) => {
-		console.log(req.params.id);
 		getFiles(req.params.id, res);
-
 	});
 
 	// FILE QUERY URL
 	app.post('/findMyFiles/', (req, res) => {
 		var param = req.body.param;
-		console.log(param);
 		findFiles(req, res, param);
 	});
 
@@ -223,30 +215,141 @@ conn.once('open', function () {
 
 
 	app.post('/api/auth', (req, res) => {
+
+		// Check if user is already registered
 		users.getusers((err, result) => {
 			if (err) { throw err; }
 			var found = false;
 			result.forEach(element => {
 				if (element.username == req.body.username) {
-					console.log('Found Match !');
+					// When found mark it
 					found = 1
 					if (element.password == req.body.password) {
+						// Send the data
 						res.send(element);
-						console.log("Authentication : Success");
 					} else {
-						res.sendStatus(401)
-						console.log("Authentication : Failed")
+						// Send Invalid
+						res.send('INP')
 					}
 				}
 			});
 
+			// If not found ( New User)
 			if (!found) {
-				users.adduser(req.body, (err, result) => {
-					res.send(result)
+
+				// Check if invitee is pending registration
+
+				// Acquire list of Pending 
+				invitees.getInvitees((err, result) => {
+					// throw errors
+					if (err) { throw err; }
+
+					// Cheking here
+
+					trap = 0
+
+					for (let index = 0; index < result.length; index++) {
+						if (req.body.username == result[index].email) {
+							console.log('registered but not verified');
+							trap = 1;
+						}
+					}
+
+					// Notify the user
+					if (trap) {
+						// You are waiting to be authorized man !
+						res.send('EAP')
+					} else {
+						// Additing you to the list of registration pending 
+						AddToInvitees(req.body.username);
+					}
 				})
+
+				function AddToInvitees(email) {
+					var authCode;
+					var creds = {
+						'email': req.body.username,
+						'password': req.body.password,
+					}
+
+					invitees.addinvitees(creds, (err, result) => {
+						if (err) { throw err; }
+						res.send('EAP First time');
+						authCode = result._id;
+
+
+
+						var content = '<h1>Welcome to Story Trail</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="http://localhost:5000/api/verifymail/' + authCode + '">Verify email</a><br><h4>Story Trail - An App by ChinmayKH</h4>'
+
+						var mailOptions = {
+							from: 'Story trail <storytrail.chinmaykh@gmail.com>',
+							to: email,
+							subject: 'Story trail: Email Verification !',
+							html: content
+						}
+
+						transporter.sendMail(mailOptions, function (error, info) {
+
+							if (error) {
+								console.log(error);
+								console.log("Check for security permission from google");
+							} else {
+								console.log('Email sent: To ' + req.body.username + ' authCode : ' + authCode);
+							}
+						});
+
+						//Send mail to confirm emailId
+						//Enclose this in a proper route provider
+
+
+					})
+
+				}
 			}
 		});
 	})
+
+	// Verification !
+	// Check if 
+	app.get('/api/verifymail/:id', (req, res) => {
+		invitees.getinviteesById(req.params.id, (err, result) => {
+			if(err){throw err;}
+
+			if (result[0] == undefined) {
+				res.send('Please Check')
+			} else {
+				var body = {
+					"username": result[0].email,
+					"password": result[0].password,
+					"story_list": [],
+					"invites": []
+				}
+
+				users.getuserByEmail(body.email, (err, resul) => {
+					if (resul.length == 0) {
+						users.adduser(body, (er, resu) => {
+							if (er) { throw er; }
+							res.send('<a href="/#!/login">Redirect to Login</a>')
+							invitees.removeinvitees(req.params.id, (e, re) => {
+								if (e) { throw e; }
+							})
+						})
+					} else{
+						res.send('Already verified')
+					}
+				})
+
+			}
+		})
+	});
+
+	app.get('/list/invitees', (req, res) => {
+		invitees.getinviteess((err, result) => {
+			if (err) { throw err; }
+			res.send(result)
+		});
+	})
+
 	// Stories
 
 	app.get('/api/list/story', (req, res) => {
@@ -270,7 +373,7 @@ conn.once('open', function () {
 				{
 					"heading": result[0].heading,
 					"des": result[0].entries[0].entry,
-					"_id":result[0]._id
+					"_id": result[0]._id
 				}
 			)
 
@@ -279,10 +382,8 @@ conn.once('open', function () {
 
 
 	app.post('/api/get/story', (req, res) => {
-		console.log(req.body)
 		story.getstoryById(req.body._id, (err, result) => {
 			if (err) { throw err; }
-			console.log(result)
 			res.send(result[0]);
 		})
 	})
@@ -296,7 +397,69 @@ conn.once('open', function () {
 
 	// Routing ends here !
 
-	app.set('port',(process.env.PORT || 5000 ))
-	app.listen( app.get('port') );
-	console.log("The Server is running on port number " + app.get('port'))
+
+	// Socket.io for real time communication... WEbsockets are cool 
+
+
+
+	io.sockets.on('connection', (socket) => {
+
+		// Disconnected
+		socket.on('disconnect', (e) => {
+
+			var checl = false;
+			var n;
+			for (let index = 0; index < activeStories.length; index++) {
+				if (activeStories[index].user == socket) {
+					checl = true;
+					n = index
+				}
+			}
+
+			if (checl) {
+				activeStories.splice(n, 1);
+				io.sockets.emit('freedOne', activeStories);
+			}
+
+		})
+
+		// Send 
+		socket.on('blockEdit', (data) => {
+
+			// Check dam
+			var flag = 0;
+
+			// Check if incoming story is already being edited
+			for (let index = 0; index < activeStories.length; index++) {
+				if (activeStories[index].storyData.story == data.story) {
+					flag = 1;
+					break;
+				}
+			}
+
+			// If story is not being edited then add incoming accept to the list
+			if (flag == 0) {
+				var blackList = {
+					user: socket,
+					storyData: data
+				}
+				activeStories.push(blackList);
+				console.log(activeStories);
+				io.sockets.emit(data.user, 'Authorized')
+			} else {
+				io.sockets.emit(data.user, 'Unauthorized')
+			}
+
+		})
+
+	})
+
+
+
+	server.listen(process.env.PORT || 5000, (e) => {
+		console.log("The Server is running on port number " + 5000)
+	})
+
 });
+
+
