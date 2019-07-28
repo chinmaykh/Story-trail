@@ -4484,6 +4484,18 @@ nav .input-field label.active i {
   }
 }
 
+.bottom-nav{
+  position: fixed;
+  height:56px;
+  bottom: 0%;
+}
+
+.central-fab{
+  position: fixed;
+  left:48%;
+  bottom: 20px
+}
+
 a {
   text-decoration: none;
 }
@@ -5272,8 +5284,8 @@ small {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   line-height: 40px;
   padding: 0;
   background-color: #26a69a;
