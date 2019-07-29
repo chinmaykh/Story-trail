@@ -38,32 +38,32 @@ myApp.service('fileUpload', ['$http', function ($http) {
 
             activeGrp.messages.push(
                 {
-                    "entry":"File uploaded by " + localStorage.getItem("Name") + " to access , go to http://localhost:8989/files/" +  response.data.fileUploadId,
+                    "entry": "File uploaded by " + localStorage.getItem("Name") + " to access , go to http://localhost:8989/files/" + response.data.fileUploadId,
                     "user": localStorage.getItem("Name")
                 }
             )
-            
-        $http({
-            method: "POST",
-            url: "/api/class/",
-            data: activeGrp 
-        }).then((result) => {
-            // What do i do with the result ?
-            console.log("Successfully transacted the message ....");
-        }, (result) => {
-            alert("Some error geting messages");
-        })
+
+            $http({
+                method: "POST",
+                url: "/api/class/",
+                data: activeGrp
+            }).then((result) => {
+                // What do i do with the result ?
+                console.log("Successfully transacted the message ....");
+            }, (result) => {
+                alert("Some error geting messages");
+            })
 
 
             myApp.controller('GroupController').$scope.dynamicize(activeGrp.name);
             // document.getElementById('fl').style.display = "none";
             // document.getElementById('fs').style.display = "block";
             // console.log(response);
-         }, function myError(response) {
-            console.log(response.data);                 
-        //     console.log(response);
-        //     document.getElementById('fl').style.display = "block";
-        //     document.getElementById('fs').style.display = "none";
+        }, function myError(response) {
+            console.log(response.data);
+            //     console.log(response);
+            //     document.getElementById('fl').style.display = "block";
+            //     document.getElementById('fs').style.display = "none";
         });
     }
 
@@ -71,10 +71,10 @@ myApp.service('fileUpload', ['$http', function ($http) {
 
 
 
-myApp.controller('GroupController', function ($scope, $http, $interval, $location, $anchorScroll,fileUpload, $window) {
+myApp.controller('GroupController', function ($scope, $http, $interval, $location, $anchorScroll, fileUpload, $window) {
     console.log("Group Controller loaded.... ");
     console.log($window.innerWidth);
-    
+
     /* How this works
         First, by the ID of the user, all the group(class) names are called.
         On Clicking on any of the classes from the list, the messages panel will 
@@ -97,8 +97,8 @@ myApp.controller('GroupController', function ($scope, $http, $interval, $locatio
 
 
 
-  
-    
+
+
     // Dynamic data adaption system 
 
 
@@ -118,7 +118,7 @@ myApp.controller('GroupController', function ($scope, $http, $interval, $locatio
     $scope.adjustHeight = function () {
     }
 
-    $scope.dynamicize = function(grp) {
+    $scope.dynamicize = function (grp) {
         $scope.dynamic = {
             "head": grp
         }
@@ -145,17 +145,18 @@ myApp.controller('GroupController', function ($scope, $http, $interval, $locatio
             console.log($scope.dynamic);
             console.log(result.data[0]);
             $location.hash('end');
-            
-            $interval(function startPing(){$scope.dynamicize(activeGrp.name);
-$interval.cancel(); 
-},100000000);
-$anchorScroll;
-document.getElementById("end").scrollTop = 999999999999999999999999999;
+
+            $interval(function startPing() {
+                $scope.dynamicize(activeGrp.name);
+                $interval.cancel();
+            }, 100000000);
+            $anchorScroll;
+            document.getElementById("end").scrollTop = 999999999999999999999999999;
         }, (result) => {
             alert("Some error geting messages");
         })
-    
-        
+
+
     }
 
     $scope.sendMessage = function () {
@@ -188,7 +189,7 @@ document.getElementById("end").scrollTop = 999999999999999999999999999;
     }
 
 
-    
+
     $scope.uploadFile = function () {
         var file = $scope.IMAGE;
         console.log('file is ');
@@ -200,32 +201,32 @@ document.getElementById("end").scrollTop = 999999999999999999999999999;
         var myName = $scope.place;
         console.log("The file name given is" + myName);
         var uploadUrl = "/upload/";
-         fileUpload.uploadFileToUrl(file, uploadUrl, chatnam, usr, myName);   
-};
+        fileUpload.uploadFileToUrl(file, uploadUrl, chatnam, usr, myName);
+    };
 
-$interval( ()=>{
-    $location.hash('end');
-    $anchorScroll;
-    console.log("SCSCSCSCSCSCSC")
-}, 200);
+    $interval(() => {
+        $location.hash('end');
+        $anchorScroll;
+        console.log("SCSCSCSCSCSCSC")
+    }, 200);
 
-$scope.mobileDynamic = function (grpName) {
-    
-    $http({
-        method: "GET",
-        url: "/api/class/" + grpName
-    }).then((result) => {
-        console.log(result.data[0].messages);
-        $scope.mobile_msg = result.data[0].messages;
-    }, (result)=>{
-        console.log(result.data[0].messages);
-    });
-}
+    $scope.mobileDynamic = function (grpName) {
 
-$scope.mobile_input = { position :"absolute", margin:0, "bottom" : "0%", color:"black","background-color":"white", bottom:0};
-$scope.mobile_container = { position : "relative" , "overflow-y" : "scroll", 'height':'85vh', 'padding-bottom':'1vh' }
-$scope.parentOfMsg = {  "overflow-y" : "scroll" }
-$scope.mobileDynamic("chin &kiran");
-$scope.desktop_height = { height :  screen.availHeights };
+        $http({
+            method: "GET",
+            url: "/api/class/" + grpName
+        }).then((result) => {
+            console.log(result.data[0].messages);
+            $scope.mobile_msg = result.data[0].messages;
+        }, (result) => {
+            console.log(result.data[0].messages);
+        });
+    }
+
+    $scope.mobile_input = { position: "absolute", margin: 0, "bottom": "0%", color: "black", "background-color": "white", bottom: 0 };
+    $scope.mobile_container = { position: "relative", "overflow-y": "scroll", 'height': '85vh', 'padding-bottom': '1vh' }
+    $scope.parentOfMsg = { "overflow-y": "scroll" }
+    $scope.mobileDynamic("chin &kiran");
+    $scope.desktop_height = { height: screen.availHeights };
 
 });

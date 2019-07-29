@@ -24,6 +24,9 @@ var StorySchema = mongoose.Schema({
             date:{
                 type:String,
                 required:true
+            },
+            audio:{
+                type:Object
             }
         }
     ]

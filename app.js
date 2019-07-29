@@ -106,7 +106,7 @@ conn.once('open', function () {
 
 	// FILE UPLOAD URL
 	app.post('/upload', (req, res) => {
-		req.files.file.name = req.body.class;
+		console.log(req.files)
 		cmon(req, res);
 	});
 

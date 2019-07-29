@@ -11,6 +11,9 @@
                 {{entry.entry}}
             </p>
             <br>
+            <audio src="{{entry.audio.audId}}" ng-show="{{entry.audio.present}}" style="width:100%" controls></audio>
+            <br>
+            <br>
             <div class="chip secondary-content" style="float: right;">
                 <img src="/images/photo.png">
                 {{entry.author_name}}
@@ -18,20 +21,70 @@
             <br>
         </div>
         <br>
-    </li>
-    <li class="collection-item">
-        <h5>Extend the t(r)ail</h5>
-        <div class="row">
-            <form ng-submit="addPart()">
-                <h6 ng-model="editText"></h6>
-                <div class="input-field col s11">
-                    <input  id="textarea1" class="materialize-textarea" ng-model="insta_para" required>
-                </div>
-                <i class="material-icons col s1 circle" style="margin-block-start: 1.3em"
-                    onclick="document.getElementById('recorder').click()">mic<input type="file" accept="audio/*" capture
-                        id="recorder" style="visibility: hidden"></i>
 
-                <button class="btn purple col s12" style="border-radius:15em" type="submit">Commit</button>
+    </li>
+
+    <li></li>
+
+    <li class="collection-item z-depth-3" style="padding: 0%">
+
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header">
+                    <h5>Extend the t(r)ail</h5>
+                </div>
+                
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <h6>Support with vocal narrative ?</h6>
+
+                </div>
+                <div class="collapsible-body row">
+                    <span>
+                        Click RECORD to start recording and STOP to stop. Choose if you want to include this file with
+                        the current text. <br>
+                        <div class="col s12"><br></div>
+                        <div class="col s4" style="text-align: right"><button class="btn-large"
+                                ng-click="recordIt()">REcord</button></div>
+                        <div class="col s1"></div>
+
+                        <div class="col s4"><button class="btn-large" id="Stop">Stop</button></div>
+                        <div class="col s3">
+                            <a class="btn-floating btn-large purple lighten-3 z-index-3">
+                                <i class="large material-icons black-text"
+                                    onclick="document.getElementById('player').src =''; document.getElementById('player').value ='0'">refresh</i>
+                            </a>
+                        </div>
+                        <div class="col s12" style="text-align: center"><br></div>
+                        <div class="col s8" style="text-align: center"><audio id="player" controls></audio></div>
+                        <span class=" col s12">
+                            <br>
+                            <label class="col s5">
+                                <input type="checkbox" ng-model="include" id="ch" ng-click="check()" />
+                                <span>Include with narrative ?</span>
+                            </label>
+                        </span>
+                    </span>
+                </div>
+            </li>
+            <li class="row">
+                <div class="input-field col s12">
+                    <textarea id="textarea1" class="materialize-textarea" ng-model="insta_para" placeholder="Type on.."
+                        required></textarea>
+                </div>
+            </li>
+            <li class="row">
+                <button class="btn purple col s12" style="border-radius:15em; height:48px" type="submit"
+                    ng-click="addPart()">Commit</button>
+
+            </li>
+        </ul>
+
+
+
+        <div class="row">
+
             </form>
         </div>
     </li>
@@ -39,6 +92,3 @@
 
 
 <!-- Socket .io -->
-<script>
-
-</script>

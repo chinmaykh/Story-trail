@@ -3428,6 +3428,14 @@ table span.badge {
           font-feature-settings: 'liga';
 }
 
+.mic {
+margin-block-start: 1.3em;
+border-radius: 50%;
+height:30px;
+width:30px;
+text-align:center;
+line-height: 1.34
+}
 .container {
   margin: 0 auto;
   max-width: 1280px;

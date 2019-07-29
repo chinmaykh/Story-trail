@@ -35,6 +35,10 @@ myApp.config(function ($routeProvider) {
       controller:'InvitesController',
       templateUrl:'views/invites.html'
     })
+    .when('/audio',{
+      controller:'AudioController',
+      templateUrl:'views/audio_record.html'
+    })
 
     /*
     .when('/urlextension', {

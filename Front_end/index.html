@@ -15,7 +15,7 @@
     <!-- <link rel="manifest" href="/manifest.json"> -->
 </head>
 
-<body style="font-family: 'PT Sans', sans-serif;"> 
+<body style="font-family: 'PT Sans', sans-serif;">
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper purple darken-2" id="navnavnav" style="position: relative;">
@@ -100,12 +100,17 @@
     <script src="./controllers/login.js"></script>
     <script src="./controllers/share.js"></script>
     <script src="./controllers/invites.js"></script>
+    <script src="./controllers/audio.js"></script>
 
     <script>
         // Navbar initialization
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.sidenav');
             var instances = M.Sidenav.init(elems, {});
+
+            var elem = document.querySelectorAll('.collapsible');
+            var instances = M.Collapsible.init(elem, {});
+
         });
 
     </script>
@@ -121,10 +126,9 @@
 
     </script>
 
-
     <script>
-    </script>
 
+    </script>
 </body>
 
 </html>
