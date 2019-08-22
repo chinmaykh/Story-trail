@@ -4,5 +4,6 @@
         "insta",
         "ondataavailable",
         "stryline"
-    ]
+    ],
+    "workbench.colorTheme": "Material Theme"
 }

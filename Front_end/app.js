@@ -39,7 +39,9 @@ myApp.config(function ($routeProvider) {
       controller:'AudioController',
       templateUrl:'views/audio_record.html'
     })
-
+    .when('/intro',{
+      templateUrl:'views/intro.html'
+    })
     /*
     .when('/urlextension', {
         controller:'CntrlName'

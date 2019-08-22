@@ -21,7 +21,7 @@ var fileupload = require("express-fileupload");
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 
-app.use(express.static(__dirname + '/Front_end'));		//static public directory to be used
+app.use(express.static(__dirname +'/Front_end'));		//static public directory to be used
 app.use(bodyParser.json()); // BOdy PArser initilization
 app.use(fileupload());
 app.use(function (req, res, next) {
@@ -120,6 +120,13 @@ conn.once('open', function () {
 		var param = req.body.param;
 		findFiles(req, res, param);
 	});
+
+
+	// App intro       
+
+	app.get('/intro',(req,res)=>{
+		res.sendFile(__dirname + '/Front_end/views/intro.html')
+	})
 
 	//----- Feedback -----
 
