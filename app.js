@@ -286,7 +286,7 @@ conn.once('open', function () {
 
 
 
-						var content = '<h1>Welcome to Story Trail</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="http://localhost:5000/api/verifymail/' + authCode + '">Verify email</a><br><h4>Story Trail - An App by ChinmayKH</h4>'
+						var content = '<h1>Welcome to Story Trail</h1><br><h3>Click on this link to verify email and get started</h3><br><a href="https://storytrail.herokuapp.com/api/verifymail/' + authCode + '">Verify email</a><br><h4>Story Trail - An App by ChinmayKH</h4>'
 
 						var mailOptions = {
 							from: 'Story trail <storytrail.chinmaykh@gmail.com>',
@@ -323,7 +323,7 @@ conn.once('open', function () {
 			if(err){throw err;}
 
 			if (result[0] == undefined) {
-				res.send('Please Check')
+				res.send("Some error occurred, please check if you're already verified.")
 			} else {
 				var body = {
 					"username": result[0].email,
